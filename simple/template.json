@@ -1,0 +1,145 @@
+{
+    "$schema": "https://schema.management.azure.com/schemas/2019-08-01/managementGroupDeploymentTemplate.json#",
+    "contentVersion": "1.0.0.0",
+    "parameters": {
+        "scope": {
+            "type": "string",
+            "metadata": {
+                "description": "The scope for the policy definition at assignment."
+            }
+        },
+        "assignmentScopeExclusions": {
+            "type": "array",
+            "defaultValue": [],
+            "metadata": {
+                "description": "The policy's excluded scopes."
+            }
+        },
+        "enforcementMode": {
+            "type": "string",
+            "allowedValues": [
+                "Default",
+                "DoNotEnforce"
+            ],
+            "defaultValue": "Default",
+            "metadata": {
+                "description": "The policy assignment enforcement mode. Possible values are Default and DoNotEnforce."
+            }
+        }
+    },
+    "variables": {
+        "policyName": "53c11198-2b31-45dc-9437-cc5eb670beae",
+        "policyDisplayName": "Require simple naming standard",
+        "policyDescription": "",
+        "categoryName": "DevSecOps",
+        "policyAssignmentNamePrefix": "pa-simnaming",
+        "policyAssignmentDisplayNamePrefix": "Simple Naming",
+        "policySetAssignmentName": "[concat(variables('policyAssignmentNamePrefix'), '-', toLower(parameters('enforcementMode') ) )]"
+    },
+    "resources": [
+        {
+            "type": "Microsoft.Authorization/policyDefinitions",
+            "name": "[variables('policyName') ]",
+            "apiVersion": "2019-06-01",
+            "properties": {
+                "policyType": "Custom",
+                "mode": "All",
+                "metadata": {
+                    "category": "[variables('categoryName')]"
+                },
+                "displayName": "[variables('policyDisplayName')]",
+                "description": "[variables('policyDescription')]",
+                "parameters": {},
+                "policyRule": {
+                    "if": {
+                        "anyOf": [
+                            {
+                                "allOf": [
+                                    {
+                                        "field": "type",
+                                        "equals": "Microsoft.Resources/subscriptions/resourceGroups"
+                                    },
+                                    {
+                                        "field": "name",
+                                        "notMatchInsensitively": "rg-...-we-prd-##"
+                                    },
+                                    {
+                                        "field": "name",
+                                        "notMatchInsensitively": "rg-...-ne-prd-##"
+                                    },
+                                    {
+                                        "field": "name",
+                                        "notMatchInsensitively": "rg-...-we-dev-##"
+                                    },
+                                    {
+                                        "field": "name",
+                                        "notMatchInsensitively": "rg-...-ne-dev-##"
+                                    },
+                                    {
+                                        "field": "name",
+                                        "notIn": [
+                                            "NetworkWatcherRG"
+                                        ]
+                                    },
+                                    {
+                                        "field": "name",
+                                        "notLike": "AzureBackupRG_westeurope_*"
+                                    },
+                                    {
+                                        "field": "name",
+                                        "notLike": "AzureBackupRG_northeurope_*"
+                                    }
+                                ],
+                            },
+                            {
+                                "allOf": [
+                                    {
+                                        "field": "type",
+                                        "equals": "Microsoft.Storage/storageAccounts"
+                                    },
+                                    {
+                                        "field": "name",
+                                        "notMatchInsensitively": "st...weprd##"
+                                    },
+                                    {
+                                        "field": "name",
+                                        "notMatchInsensitively": "st...neprd##"
+                                    },
+                                    {
+                                        "field": "name",
+                                        "notMatchInsensitively": "st...wedev##"
+                                    },
+                                    {
+                                        "field": "name",
+                                        "notMatchInsensitively": "rg...nedev##"
+                                    }
+                                ]
+                            }
+                            // put next resource types condition here
+                        ]
+                    },
+                    "then": {
+                        "effect": "deny"
+                    }
+                }
+            }
+        },
+        {
+            "type": "Microsoft.Authorization/policyAssignments",
+            "name": "[variables('policySetAssignmentName')]",
+            "dependsOn": [
+                "[variables('policyName')]"
+            ],
+            "apiVersion": "2019-06-01",
+            "properties": {
+                "scope": "[parameters('scope')]",
+                "notScopes": "[parameters('assignmentScopeExclusions')]",
+                "policyDefinitionId": "[concat(parameters('scope'), resourceId('Microsoft.Authorization/policyDefinitions', variables('policyName')))]",
+                "enforcementMode": "[parameters('enforcementMode')]",
+                "displayName": "[concat(variables('policyAssignmentDisplayNamePrefix'), ' ', parameters('enforcementMode') ) ]",
+                "parameters": {}
+            }
+        }
+    ],
+    "outputs": {}
+}
