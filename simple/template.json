@@ -89,7 +89,7 @@
                                         "field": "name",
                                         "notLike": "AzureBackupRG_northeurope_*"
                                     }
-                                ],
+                                ]
                             },
                             {
                                 "allOf": [
@@ -114,8 +114,7 @@
                                         "notMatchInsensitively": "rg...nedev##"
                                     }
                                 ]
-                            },
-                            "comments" : "put next resource types condition here"
+                            }
                         ]
                     },
                     "then": {
