@@ -1,0 +1,18 @@
+trigger:
+- main
+
+pool:
+  vmImage: ubuntu-default
+
+
+
+steps:
+  - task: AzureResourceManagerTemplateDeployment@3
+    inputs:
+      deploymentScope: 'Management Group'
+      azureResourceManagerConnection: 'sc-mg-dev'
+      location: 'West Europe'
+      templateLocation: 'Linked artifact'
+      csmFile: 'simple/template.json'
+      csmParametersFile: 'simple/parameters.json'
+      deploymentMode: 'Incremental'
