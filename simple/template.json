@@ -114,8 +114,8 @@
                                         "notMatchInsensitively": "rg...nedev##"
                                     }
                                 ]
-                            }
-                            // put next resource types condition here
+                            },
+                            "comments" : "put next resource types condition here"
                         ]
                     },
                     "then": {
