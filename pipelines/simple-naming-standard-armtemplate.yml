@@ -4,8 +4,6 @@ trigger:
 pool:
   vmImage: ubuntu-latest
 
-
-
 steps:
   - task: AzureResourceManagerTemplateDeployment@3
     inputs:
@@ -16,4 +14,4 @@ steps:
       csmFile: 'simple/template.json'
       csmParametersFile: 'simple/parameters.json'
       deploymentMode: 'Incremental'
-      overrideParameters: -scope '/providers/Microsoft.Management/managementGroups/mg-devsecops-dev'
+      overrideParameters: -scope "/providers/Microsoft.Management/managementGroups/mg-devsecops-dev"
