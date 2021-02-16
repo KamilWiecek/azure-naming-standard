@@ -16,3 +16,4 @@ steps:
       csmFile: 'simple/template.json'
       csmParametersFile: 'simple/parameters.json'
       deploymentMode: 'Incremental'
+      overrideParameters: -scope '/providers/Microsoft.Management/managementGroups/mg-devsecops-dev'
