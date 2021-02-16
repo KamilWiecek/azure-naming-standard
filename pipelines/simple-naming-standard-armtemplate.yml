@@ -7,13 +7,15 @@ pool:
 variables:
 - name: scope
   value: /providers/Microsoft.Management/managementGroups/mg-devsecops-dev
+- name: azureResourceManagerConnection
+  value: sc-mg-dev
 
 steps:
   - task: AzureResourceManagerTemplateDeployment@3
     displayName: Deploy naming standard
     inputs:
       deploymentScope: 'Management Group'
-      azureResourceManagerConnection: 'sc-mg-dev'
+      azureResourceManagerConnection: $(azureResourceManagerConnection)
       location: 'West Europe'
       templateLocation: 'Linked artifact'
       csmFile: 'simple/template.json'
