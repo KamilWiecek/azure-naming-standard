@@ -246,7 +246,7 @@
                 }
             }
         ],
-        "policySetPolicyDefinitions": "[union( json(concat('[{\"policyDefinitionId\": \"', variables('customPolicyDefinitions').costCenterTagAllowedValues.policyDefinitionId,'\"}]' ) ), variables('requiredTagOnResourcePolicies'), variables('requiredTagOnRgPolicies'), variables('requiredTagOnSubPolicies'), variables('tagsToInheritFromRgIfMissingPolicies'), variables('tagsToInheritFromRgForcePolicies'), variables('inheritTagFromSubsIfMissingPolicies'), variables('inheritTagFromSubForcePolicies'), variables('inheritTagFromSubsToRgForcePolicies'), variables('inheritTagFromSubsToRgIfMissingPolicies') ) ]",
+        "policySetPolicyDefinitions": "[union(variables('requiredTagOnResourcePolicies'), variables('requiredTagOnRgPolicies'), variables('requiredTagOnSubPolicies'), variables('tagsToInheritFromRgIfMissingPolicies'), variables('tagsToInheritFromRgForcePolicies'), variables('inheritTagFromSubsIfMissingPolicies'), variables('inheritTagFromSubForcePolicies'), variables('inheritTagFromSubsToRgForcePolicies'), variables('inheritTagFromSubsToRgIfMissingPolicies') ) ]",
         "policySetAssignmentName": "[concat(variables('policyAssignmentNamePrefix'), '-', toLower(parameters('enforcementMode') ) )]",
         "builtInRoleNames": {
             "AcrDelete": "[concat('/providers/Microsoft.Authorization/roleDefinitions/', 'c2f4ef07-c644-48eb-af81-4b1b4947fb11')]",
