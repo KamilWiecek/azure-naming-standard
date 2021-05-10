@@ -6,9 +6,9 @@ pool:
 
 variables:
 - name: scope
-  value: /providers/Microsoft.Management/managementGroups/mg-devsecops-dev
+  value: /providers/Microsoft.Management/managementGroups/mg-prd
 - name: azureResourceManagerConnection
-  value: sc-mg-dev
+  value: sc-prd
 
 steps:
   - task: AzureResourceManagerTemplateDeployment@3
