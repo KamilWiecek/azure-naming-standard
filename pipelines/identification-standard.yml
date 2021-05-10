@@ -22,6 +22,14 @@ steps:
       csmParametersFile: 'tags/parameters.json'
       deploymentMode: 'Incremental'
       overrideParameters: -scope "$(scope)"
+  - task: PowerShell@2
+    displayName: Conveert template before deployment
+    inputs:
+      targetType: 'inline'
+      script: |
+        $template = Get-Content -Path ./advanced/template.json
+        $template -join '' | Out-File -FilePath ./advanced/template.json
+
   - task: AzureResourceManagerTemplateDeployment@3
     displayName: Deploy naming standard
     inputs:
