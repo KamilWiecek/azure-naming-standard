@@ -1,0 +1,35 @@
+trigger:
+- main
+
+pool:
+  vmImage: ubuntu-latest
+
+variables:
+- name: scope
+  value: /providers/Microsoft.Management/managementGroups/mg-devsecops-dev
+- name: azureResourceManagerConnection
+  value: sc-mg-dev
+
+steps:
+  - task: AzureResourceManagerTemplateDeployment@3
+    displayName: Deploy Tagging Standard
+    inputs:
+      deploymentScope: 'Management Group'
+      azureResourceManagerConnection: $(azureResourceManagerConnection)
+      location: 'West Europe'
+      templateLocation: 'Linked artifact'
+      csmFile: 'tags/template.json'
+      csmParametersFile: 'tags/parameters.json'
+      deploymentMode: 'Incremental'
+      overrideParameters: -scope "$(scope)"
+  # - task: AzureResourceManagerTemplateDeployment@3
+  #   displayName: Deploy naming standard
+  #   inputs:
+  #     deploymentScope: 'Management Group'
+  #     azureResourceManagerConnection: $(azureResourceManagerConnection)
+  #     location: 'West Europe'
+  #     templateLocation: 'Linked artifact'
+  #     csmFile: 'simple/template.json'
+  #     csmParametersFile: 'simple/parameters.json'
+  #     deploymentMode: 'Incremental'
+  #     overrideParameters: -scope "$(scope)"

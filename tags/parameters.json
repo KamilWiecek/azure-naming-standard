@@ -1,0 +1,43 @@
+{
+    "$schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentParameters.json#",
+    "contentVersion": "1.0.0.0",
+    "parameters": {
+        "location": {
+            "value": "westeurope"
+        },
+        "assignmentScopeExclusions": {
+            "value": [
+            ]
+        },
+        "enforcementMode": {
+            "value": "Default"
+        },
+        "tagsRequiredOnResource": {
+            "value": ["owner","costCenter"]
+        },
+        "tagsRequiredOnRg": {
+            "value": ["owner","costCenter"]
+        },
+        "tagsRequiredOnSub": {
+            "value": []
+        },
+        "tagsToInheritFromRgIfMissing": {
+            "value": ["owner","costCenter"]
+        },
+        "tagsToForceInheritFromRgForce": {
+            "value": []
+        },
+        "tagsToInheritFromSubIfMissing": {
+            "value": []
+        },
+        "tagsToInheritFromSubToRgIfMissing": {
+            "value": []
+        },
+        "tagsToForceInheritFromSubForce": {
+            "value": []
+        },
+        "tagsToInheritFromSubToRgForce": {
+            "value": []
+        }
+    }
+}
