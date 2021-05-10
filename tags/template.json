@@ -134,13 +134,6 @@
                 "displayName": "Inherit a tag from the subscription to resource group",
                 "description": "Adds or replaces the specified tag and value on the resource group from the containing subscription when any resource group is created or updated. Existing resource groups can be remediated by triggering a remediation task.",
                 "category": "Tags"
-            },
-            "costCenterTagAllowedValues": {
-                "name": "c53d67ba-234a-40d8-ac01-60bf27477748",
-                "policyDefinitionId": "[concat(parameters('scope'),'/providers/Microsoft.Authorization/policyDefinitions/c53d67ba-234a-40d8-ac01-60bf27477748') ]",
-                "displayName": "Require specific values ​​of the costCenter tag",
-                "description": "Case sensitive validation of the costCenter tag value. The valid values ​​are 'OAB', 'OAM', or 'BOTH'. If resource group or resource do not have the correct value for this tag set, then create / update request will be deny.",
-                "category": "Tags"
             }
         },
         "copy": [
@@ -462,47 +455,6 @@
                             {
                                 "field": "[[concat('tags[', parameters('tagName'), ']')]",
                                 "exists": "false"
-                            }
-                        ]
-                    },
-                    "then": {
-                        "effect": "deny"
-                    }
-                }
-            }
-        },
-        {
-            "type": "Microsoft.Authorization/policyDefinitions",
-            "name": "[variables('customPolicyDefinitions').costCenterTagAllowedValues.name ]",
-            "apiVersion": "2019-06-01",
-            "properties": {
-                "policyType": "Custom",
-                "mode": "All",
-                "metadata": {
-                    "category": "[variables('policySetCategory')]"
-                },
-                "displayName": "[variables('customPolicyDefinitions').costCenterTagAllowedValues.displayName ]",
-                "description": "[variables('customPolicyDefinitions').costCenterTagAllowedValues.description ]",
-                "parameters": {
-                },
-                "policyRule": {
-                    "if": {
-                        "allOf": [
-                            {
-                                "field": "tags['costCenter']",
-                                "exists": "true"
-                            },
-                            {
-                                "field": "tags['costCenter']",
-                                "notmatch": "OAB"
-                            },
-                            {
-                                "field": "tags['costCenter']",
-                                "notmatch": "OAM"
-                            },
-                            {
-                                "field": "tags['costCenter']",
-                                "notmatch": "BOTH"
                             }
                         ]
                     },
