@@ -22,14 +22,14 @@ steps:
       csmParametersFile: 'tags/parameters.json'
       deploymentMode: 'Incremental'
       overrideParameters: -scope "$(scope)"
-  # - task: AzureResourceManagerTemplateDeployment@3
-  #   displayName: Deploy naming standard
-  #   inputs:
-  #     deploymentScope: 'Management Group'
-  #     azureResourceManagerConnection: $(azureResourceManagerConnection)
-  #     location: 'West Europe'
-  #     templateLocation: 'Linked artifact'
-  #     csmFile: 'simple/template.json'
-  #     csmParametersFile: 'simple/parameters.json'
-  #     deploymentMode: 'Incremental'
-  #     overrideParameters: -scope "$(scope)"
+  - task: AzureResourceManagerTemplateDeployment@3
+    displayName: Deploy naming standard
+    inputs:
+      deploymentScope: 'Management Group'
+      azureResourceManagerConnection: $(azureResourceManagerConnection)
+      location: 'West Europe'
+      templateLocation: 'Linked artifact'
+      csmFile: 'advanced/template.json'
+      csmParametersFile: 'advanced/parameters.json'
+      deploymentMode: 'Incremental'
+      overrideParameters: -scope "$(scope)"

@@ -1,0 +1,181 @@
+{
+    "$schema": "https://schema.management.azure.com/schemas/2019-08-01/managementGroupDeploymentTemplate.json#",
+    "contentVersion": "1.0.0.0",
+    "parameters": {
+        "location": {
+            "type": "string",
+            "defaultValue": "westeurope",
+            "metadata": {
+                "strongType": "location",
+                "description": "The location for the policy assignment."
+            }
+        },
+        "scope": {
+            "type": "string",
+            "defaultValue": "",
+            "metadata": {
+                "description": "The scope for the policy definition at assignment."
+            }
+        },
+        "assignmentScopeExclusions": {
+            "type": "array",
+            "defaultValue": [
+            ],
+            "metadata": {
+                "description": "The policy's excluded scopes."
+            }
+        },
+        "enforcementMode": {
+            "type": "string",
+            "allowedValues": [
+                "Default",
+                "DoNotEnforce"
+            ],
+            "defaultValue": "Default",
+            "metadata": {
+                "description": "The policy assignment enforcement mode. Possible values are Default and DoNotEnforce."
+            }
+        }
+    },
+    "variables": {
+        "policyName": "d13b6910-f8aa-456a-8d41-5116b31fbdcc",
+        "policyDisplayName": "Require advanced naming standard",
+        "policyDescription": "",
+        "categoryName": "DevSecOps",
+        "policyAssignmentNamePrefix": "pa-advnaming",
+        "policyAssignmentDisplayNamePrefix": "Advanced naming",
+        "policySetAssignmentName": "[concat(variables('policyAssignmentNamePrefix'), '-', toLower(parameters('enforcementMode') ) )]"
+    },
+    "resources": [
+        {
+            "type": "Microsoft.Authorization/policyDefinitions",
+            "name": "[variables('policyName') ]",
+            "apiVersion": "2019-06-01",
+            "properties": {
+                "policyType": "Custom",
+                "mode": "All",
+                "metadata": {
+                    "category": "[variables('categoryName')]"
+                },
+                "displayName": "[variables('policyDisplayName')]",
+                "description": "[variables('policyDescription')]",
+                "parameters": {
+                },
+                "policyRule": {
+                    "if": {
+                        "anyOf": [
+                            {
+                                "allOf": [
+                                    {
+                                        "field": "type",
+                                        "equals": "Microsoft.Resources/subscriptions/resourceGroups"
+                                    },
+                                    {
+                                        "value": "[[if(
+                                                        equals(field('name'), toLower(field('name') ) ),
+                                                        if(
+                                                            equals(length(split(field('name'), '-') ), 5),
+                                                            if(
+                                                                equals(split(field('name'), '-')[0],'rg'),
+                                                                if(
+                                                                    not(empty(split(field('name'), '-')[1])),
+                                                                    if(
+                                                                        contains(createArray('dev','tst','prd'), split(field('name'), '-')[2]),
+                                                                        if(
+                                                                            contains(createArray('we','ne'), split(field('name'), '-')[3]),
+                                                                            if(
+                                                                                equals(length(split(field('name'), '-')[4]), 1),
+                                                                                if(
+                                                                                    empty(replace(replace(replace(replace(replace(replace(replace(replace(replace(replace(split(field('name'),'-')[4],'0',''),'1',''),'2',''),'3',''),'4',''),'5',''),'6',''),'7',''),'8',''),'9','') ),
+                                                                                    'isValid',
+                                                                                    'hasNonNumericSuffix'
+                                                                                ),
+                                                                                'hasWrongSuffixLength'
+                                                                            ),
+                                                                            'hasWrongLocation'
+                                                                        ),
+                                                                        'hasWrongEnvironment'
+                                                                    ),
+                                                                    'hasNotWorkloadName'
+                                                                ),
+                                                                'hasWrongPrefix'
+                                                            ),
+                                                            'hasNotFourDashSeparators'
+                                                        ),
+                                                        'isNotLowercase')]",
+                                        "notEquals": "isValid"
+                                    },
+                                    {
+                                        "field": "name",
+                                        "notIn": [ "NetworkWatcher_westeurope", "NetworkWatcher_northeurope" ]
+                                    },
+                                    {
+                                        "field": "name",
+                                        "notLike": "AzureBackupRG_westeurope_*"
+                                    },
+                                    {
+                                        "field": "name",
+                                        "notLike": "AzureBackupRG_northeurope_*"
+                                    }
+                                ]
+                            },
+                            {
+                                "allOf": [
+                                    {
+                                        "field": "type",
+                                        "equals": "Microsoft.Storage/storageAccounts"
+                                    },
+                                    {
+                                        "value": "[[if(
+                                                    equals(field('name'), toLower(field('name') ) ),
+                                                    if(
+                                                        greater(length(field('name') ), 7),
+                                                        if(
+                                                            startsWith(field('name'),'st'),
+                                                            if(
+                                                                empty(replace(replace(replace(replace(replace(replace(replace(replace(replace(replace(substring(field('name'), sub(length(field('name')), 2), 2),'0',''),'1',''),'2',''),'3',''),'4',''),'5',''),'6',''),'7',''),'8',''),'9','') ),
+                                                                if(
+                                                                    contains(createArray('dev','tst','prd'), substring(field('name'), sub(length(field('name')), 5), 3)),
+                                                                    'isValid',
+                                                                    'hasWrongEnvironment'
+                                                                ),
+                                                                'hasWrongSuffix'
+                                                            ),
+                                                            'hasWrongPrefix'
+                                                        ),
+                                                        'hasLengthNotGreaterThanSeven'
+                                                    ),
+                                                    'isNotLowercase')]",
+                                        "notEquals": "isValid"
+                                    }
+                                ]
+                            }
+                        ]
+                    },
+                    "then": {
+                        "effect": "deny"
+                    }
+                }
+            }
+        },
+        {
+            "type": "Microsoft.Authorization/policyAssignments",
+            "name": "[variables('policySetAssignmentName')]",
+            "dependsOn": [
+                "[variables('policyName')]"
+            ],
+            "apiVersion": "2019-06-01",
+            "properties": {
+                "scope": "[parameters('scope')]",
+                "notScopes": "[parameters('assignmentScopeExclusions')]",
+                "policyDefinitionId": "[concat(parameters('scope'), resourceId('Microsoft.Authorization/policyDefinitions', variables('policyName')))]",
+                "enforcementMode": "[parameters('enforcementMode')]",
+                "displayName": "[concat(variables('policyAssignmentDisplayNamePrefix'), ' ', parameters('enforcementMode') ) ]",
+                "parameters": {
+                }
+            },
+            "location": "[parameters('location')]"
+        }
+    ],
+    "outputs": {}
+}
