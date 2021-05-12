@@ -203,9 +203,6 @@
             "type": "Microsoft.Authorization/roleAssignments",
             "apiVersion": "2020-04-01-preview",
             "name": "[variables('roleName')]",
-            "dependsOn": [
-                "[variables('policySetAssignmentName')]"
-            ],
             "properties": {
                 "roleDefinitionId": "[variables('roleDefinitionId')]",
                 "principalId": "[reference(resourceId('Microsoft.Authorization/policyAssignments',variables('policySetAssignmentName') ), '2019-09-01', 'full').identity.principalId]"
