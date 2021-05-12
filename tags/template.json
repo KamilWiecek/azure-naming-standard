@@ -426,6 +426,7 @@
             "Workbook Contributor": "[concat('/providers/Microsoft.Authorization/roleDefinitions/', 'e8ddcd69-c73f-4f9f-9844-4100522f16ad')]",
             "Workbook Reader": "[concat('/providers/Microsoft.Authorization/roleDefinitions/', 'b279062a-9be3-42a0-92ae-8b3cf002ec4d')]"
         },
+        "roleName": "[guid(parameters('scope'), variables('policySetAssignmentName') )]",
         "policySetRequiredRoleName": "Tag Contributor",
         "roleDefinitionId": "[ variables('builtInRoleNames')[variables('policySetRequiredRoleName')]]"
     },
@@ -665,6 +666,15 @@
             "location": "[parameters('location')]",
             "identity": {
                 "type": "SystemAssigned"
+            }
+        },
+        {
+            "type": "Microsoft.Authorization/roleAssignments",
+            "apiVersion": "2020-04-01-preview",
+            "name": "[variables('roleName')]",
+            "properties": {
+                "roleDefinitionId": "[variables('roleDefinitionId')]",
+                "principalId": "[reference(resourceId('Microsoft.Authorization/policyAssignments',variables('policySetAssignmentName') ), '2019-09-01', 'full').identity.principalId]"
             }
         }
     ]
