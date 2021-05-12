@@ -8,7 +8,7 @@ variables:
 - name: scope
   value: /providers/Microsoft.Management/managementGroups/mg-prd
 - name: azureResourceManagerConnection
-  value: sc-prd
+  value: sc-augp
 
 steps:
   - task: AzureResourceManagerTemplateDeployment@3
