@@ -22,17 +22,6 @@ steps:
       csmParametersFile: 'tags/parameters.json'
       deploymentMode: 'Incremental'
       overrideParameters: -scope "$(scope)"
-  # - task: AzureResourceManagerTemplateDeployment@3
-  #   displayName: Deploy Tagging Standard
-  #   inputs:
-  #     deploymentScope: 'Management Group'
-  #     azureResourceManagerConnection: $(azureResourceManagerConnection)
-  #     location: 'West Europe'
-  #     templateLocation: 'Linked artifact'
-  #     csmFile: 'tags/roleTemplate.json'
-  #     csmParametersFile: 'tags/roleTemplate.parameters.json'
-  #     deploymentMode: 'Incremental'
-  #     overrideParameters: -scope "$(scope)"
   - task: PowerShell@2
     displayName: Conveert template before deployment
     inputs:
